@@ -1,10 +1,8 @@
 import sys
 #import
 
-start_row=0
-start_col=0
-slope_down=1
 slope_right=3
+trees_hit=0
 grid=[]
 
 def printgrid(list):
@@ -21,6 +19,11 @@ with open(sys.argv[1], "r") as f:
 rows=len(grid)
 cols=len(grid[0])
 
-print(len(grid),"rows",len(grid[0]),"cols")
-print(len(grid)/slope_down, len(grid[0]
-printgrid(grid)
+for row in range(rows):
+    col=slope_right*row
+    if grid[row][col%cols] == '#':
+        trees_hit += 1
+    #print(row,col,grid[row][col%cols],trees_hit)
+
+#printgrid(grid)
+print(trees_hit)
