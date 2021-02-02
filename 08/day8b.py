@@ -38,14 +38,14 @@ for i in jmp_lines:
     visited_nodes = []
     while(not(current_node in visited_nodes)):
         if(current_node + 1 > len(lines_copy)):
-                print(" Last line reached for index",i,)
+                print(" Last line reached if index",i,"is changed")
                 print(" Accumulator at program end is",accumulator)
                 break
         acc_step, node_step = perform_action(lines_copy[current_node])
         
         if current_node + node_step in visited_nodes:
             #print("\tBreak for index",i,"with accumulator",accumulator)
-            break;
+            break
         else:
             visited_nodes.append(current_node)
             accumulator += acc_step
