@@ -3,11 +3,12 @@ import sys,fileinput
 #Set global vars (the layout, and the unchanging dimensions of the layout
 seat_layout = [list(line.strip()) for line in fileinput.input(files=sys.argv[1])]
 layout_dim = (len(seat_layout),len(seat_layout[0]))
+stopSignal = False
 
-def count_filled_seats(layout):
+def count_filled_seats():
     filled_seats = 0
-    for row in layout:
-        print("{} # in {}".format(row.count('#'),row))
+    for row in seat_layout:
+        # print("{} # in {}".format(row.count('#'),row))
         filled_seats += row.count('#')
     return filled_seats
 
@@ -22,7 +23,7 @@ def adjacent_seats(seat):
 
 def no_occupied_seats_adjacent(seat):
     for adj_seat in adjacent_seats(seat):
-        if adj_seat == "#":
+        if seat_layout[adj_seat[0]][adj_seat[1]] == "#":
             return False
     return True
 
@@ -34,31 +35,34 @@ def crowded_seats_adjacent(seat):
         # print(seat,count,adj_seat)
     return count >= 4
 
-def print_layout(layout):
+def print_layout():
     print("\nLayout:")
-    for row in layout:
+    for row in seat_layout:
         print("".join(row))
 
-def update_seats(layout):
-    new_layout = layout[:]
-    for x,row in enumerate(layout):
+def check_seats():
+    stu = []
+    for x,row in enumerate(seat_layout):
         for y,seat in enumerate(row):
             if seat == 'L' and no_occupied_seats_adjacent((x,y)):
-                new_layout[x][y] = "#"
+                stu.append((x,y))
+                # new_layout[x][y] = "#"
             if seat == '#' and crowded_seats_adjacent((x,y)):
-                new_layout[x][y] = "L" 
-        print(new_layout[x],seat_layout[x])
-    # print_layout(new_layout)
-    return new_layout
+                stu.append((x,y))
+    return stu
 
-stopSignal = False
-for i in range(3):
-    print_layout(seat_layout)
-    new_layout = update_seats(seat_layout)
-    seat_layout = new_layout
+def update_seats(list_of_coord):
+    for coord in list_of_coord:
+        if seat_layout[coord[0]][coord[1]] == 'L':
+            seat_layout[coord[0]][coord[1]] = '#'
+        else:
+                seat_layout[coord[0]][coord[1]] = 'L'
 
-# for x,row in enumerate(seat_layout):
-    # for y,seat in enumerate(row):
-        # print((x,y),adjacent_seats((x,y)))
-# print(adjacent_seats((3,4)))
-# print(layout_dim)
+while(not(stopSignal)):
+    # print_layout()
+    seats_to_update = check_seats()
+    if len(seats_to_update) > 0:
+        update_seats(seats_to_update)
+    else:
+        stopSignal = True
+        print(count_filled_seats())
