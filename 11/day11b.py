@@ -3,7 +3,8 @@ import timeit
 
 #Set global vars (the layout, and the unchanging dimensions of the layout
 seat_layout = [list(line.strip()) for line in fileinput.input(files=sys.argv[1])]
-layout_dim = (len(seat_layout),len(seat_layout[0]))
+maxRow = len(seat_layout)
+maxCol = len(seat_layout[0])
 
 
 def count_filled_seats():
@@ -13,13 +14,13 @@ def count_filled_seats():
         filled_seats += row.count('#')
     return filled_seats
 
-def adjacent_seats(seat):
+def directions(seat):
     adj_seats = []
     # use min and max to prevent out of bounds
-    for x in range(max(seat[0]-1,0),min(layout_dim[0],seat[0]+2)):
-        for y in range(max(seat[1]-1,0),min(layout_dim[1],seat[1]+2)):
+    for x in range(max(seat[0]-1,0),min(maxRow,seat[0]+2)):
+        for y in range(max(seat[1]-1,0),min(maxCol,seat[1]+2)):
             if (x,y) != seat:
-                adj_seats.append((x,y))
+                adj_seats.append((x-seat[0],y-seat[1]))
     return adj_seats
 
 def content(seat):
@@ -29,27 +30,44 @@ def is_floor(seat):
     return content(seat) == '.'
     
 def line_of_sight(seat):
-    for x in range(max(seat[0]-1,0),min(layout_dim[0],seat[0]+2)):
-        for y in range(max(seat[1]-1,0),min(layout_dim[1],seat[1]+2)):
-            x_angle = x-seat[0]
-            y_angle = y-seat[1]
-            notSame = (x_angle > 0 and y_angle > 0)
-            new_coord_inBounds = (0 <= x + x_angle <= layout_dim[0]-1)\
-                and (0 <= x + x_angle <= layout_dim[1]-1) and notSame
-            print(x,y,seat_layout[x][y])
-            z=1
-            while(new_coord_inBounds):
-                new_coord = (x + z*x_angle, y + z*y_angle)
-                new_coord_inBounds = (0 <= new_coord[0] <= layout_dim[0])\
-                    and (0 <= new_coord[1] <= layout_dim[1])
-                print(new_coord,content(new_coord))
-                if not is_floor(seat): #layout[new_coord] == '#''L':
-                    print("seat filled")
-                    break
-                print(new_coord)
-                z+=1
-    # for direction in adj_seats:
-        # print(seat, direction)
+    if not is_floor(seat):
+        # print(is_floor(seat),content(seat))
+        for d in directions(seat):
+            for m in range(1,maxRow*maxCol):
+                next_seat = (seat[0]+m*d[0], seat[1]+m*d[1])
+                # if next seat is in bounds
+                if 0 <= next_seat[0] < maxRow and \
+                    0 <= next_seat[1] < maxCol:
+                    if not is_floor(next_seat):
+                        print("chair at",next_seat, content(next_seat))
+                        break
+                    else:
+                        print("floor at",next_seat, content(next_seat))
+            print("next",d)
+                # seat_diff = (next_seat[0]-seat[0],next_seat[1]-seat[1])
+                # # while(True):
+                # print(row,col,next_seat,next_seat[0],seat_diff)
+                    
+                
+            # x_angle = x-seat[0]
+            # y_angle = y-seat[1]
+            # notSame = (x_angle > 0 and y_angle > 0)
+            # new_coord_inBounds = (0 <= x + x_angle <= maxRow-1)\
+                # and (0 <= x + x_angle <= maxCol-1) and notSame
+            # print(x,y,seat_layout[x][y])
+            # z=1
+            # while(new_coord_inBounds):
+                # new_coord = (x + z*x_angle, y + z*y_angle)
+                # new_coord_inBounds = (0 <= new_coord[0] <= maxRow)\
+                    # and (0 <= new_coord[1] <= maxCol)
+                # print(new_coord,content(new_coord))
+                # if not is_floor(seat): #layout[new_coord] == '#''L':
+                    # print("seat filled")
+                    # break
+                # print(new_coord)
+                # z+=1
+    # # for direction in adj_seats:
+        # # print(seat, direction)
         
 def no_occupied_seats_adjacent(seat):
     for adj_seat in adjacent_seats(seat):
@@ -89,10 +107,12 @@ def update_seats(list_of_coord):
                 seat_layout[coord[0]][coord[1]] = 'L'
 
 print_layout()
-s = (3,4)
-print(line_of_sight(s))
-print(seat_layout[3][4])
-# adjacent_seats(s)
+# s = (3,4)
+print(line_of_sight((1,4)))
+print(directions((0,0)))
+print(line_of_sight((0,0)))
+# print(seat_layout[3][4])
+# # adjacent_seats(s)
 # b = check_surroundings(s,a)
 
 # start = timeit.default_timer()
