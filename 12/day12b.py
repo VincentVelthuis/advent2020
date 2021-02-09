@@ -27,9 +27,9 @@ def move_waypoint(action, value):
     elif action == "E":
         waypoint += np.array([value,0])
     elif action == "S":
-        waypoint -= np.array([0,-1*value])
+        waypoint += np.array([0,-1*value])
     elif action == "W":
-        waypoint -= np.array([-1*value,0])
+        waypoint += np.array([-1*value,0])
     
 def turn(action,value):
     # rotate B degrees counterclockwise around origin (0,0)
@@ -40,22 +40,19 @@ def turn(action,value):
         angle = -1*math.radians(value)
     elif action == "L":
         angle = math.radians(value)
-    x = math.cos(angle)*waypoint[0] - math.sin(angle)*waypoint[1]
-    y = math.sin(angle)*waypoint[0] + math.cos(angle)*waypoint[1]
+    east = round(math.cos(angle)*waypoint[0] - math.sin(angle)*waypoint[1])
+    north = round(math.sin(angle)*waypoint[0] + math.cos(angle)*waypoint[1])
     
-    print(action,value,waypoint, np.array([round(x),round(y)]))
-    waypoint = np.array([round(x),round(y)])
+    # print(action,value,waypoint, np.array([round(x),round(y)]))
+    waypoint = np.array([east,north])
     # print(round(x),round(y))
 
-print(ship,waypoint)
 for instruction in instructions:
     action = instruction[0]
     value = int("".join(instruction[1:]))
     
     read(action,value)
+    # print(action,value,ship,waypoint)
 
 mh_dist = np.sum(abs(ship))#abs(ship[0])+abs(ship[1])
-print(ship[0],"east,",ship[1],"north: MH dist =",mh_dist)
-
-print(ship,waypoint)    
-
+print(ship[0],"E,",ship[1],"N: MH dist =",mh_dist)
