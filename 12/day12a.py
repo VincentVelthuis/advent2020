@@ -47,5 +47,8 @@ for instruction in instructions:
     value = int("".join(instruction[1:]))
     
     read_instruction(action,value)
-    print(action,value,"--",ship_dir, coord_north, coord_east)
+    # print(action,value,"--",ship_dir, coord_north, coord_east)
+
+mh_dist = abs(coord_north)+abs(coord_east)
+print(coord_east,"east,",coord_north,"north: MH dist =",mh_dist)
 
