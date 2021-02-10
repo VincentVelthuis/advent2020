@@ -18,4 +18,5 @@ for line in lines:
                 value[index]='0'
         memory[address] = int("".join(value),2)
 
+print(memory)
 print(sum(memory.values()))
