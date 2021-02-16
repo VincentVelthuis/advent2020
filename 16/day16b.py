@@ -5,6 +5,7 @@ rules={}
 your_ticket = []
 other_tickets = []
 possible_config = {}
+definitive_config = []
 
 #functions part A
 def manage_flow(line, bool1, bool2, bool3):
@@ -84,28 +85,37 @@ def set_names(index,names):
         possible_config[index] = old & names
     else:
         possible_config[index] = names
-def pprint(d):
-    for elem in d:
-        print(elem,d[elem])
-def solution_not_found():
-    length=0
-    for i in possible_config:
-        length += len(possible_config[i])
-    return length == len(possible_config)
 def find_single_element():
     for i in possible_config:
-        if len(i)
-
-
+        if len(possible_config[i]) == 1:
+            return i,possible_config[i]
+def delete_from_possible_config(name):
+    global possible_config
+    [elem] = name
+    for i in possible_config:
+        possible_config[i].discard(elem)# = \
+def product_of_departure_items():
+    product = 1
+    for index,item in enumerate(definitive_config):
+        if 'departure' in item:
+            # print(index,item,your_ticket[index])
+            product *= your_ticket[index]
+    return product
 
 #main functions
 convert_input()
 allowed_range = rules_to_range()
 drop_invalid_tickets(find_invalid_tickets(allowed_range))
 scan_valid_tickets()
-pprint(possible_config)
 
-while(solution_not_found):
-    name = find_single_element()
-    print(possible_config)
+definitive_config = [0]*len(your_ticket)
 
+while(0 in definitive_config):
+    index,set_name = find_single_element()
+    [elem_name]=set_name
+    definitive_config[index] = elem_name
+    delete_from_possible_config(set_name)
+
+# print(your_ticket)
+# print(definitive_config)
+print(product_of_departure_items())
