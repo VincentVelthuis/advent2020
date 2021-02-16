@@ -15,11 +15,13 @@ def manage_flow(line, bool1, bool2, bool3):
         return False,False,True
     else:
         return bool1,bool2,bool3
+
 def line_to_ticket(line):
     output = []
     for num in line.strip().split(','):
         output.append(int(num))
     return output
+
 def line_to_rule(line):
     rule_input = line.strip().split(":")
     name = rule_input[0]
@@ -31,6 +33,7 @@ def line_to_rule(line):
             low = int(r.split("-")[0])
             upp = int(r.split("-")[1])
             rules[name].append([low,upp])
+
 def convert_input():
     global rules,your_ticket,other_tickets
     rule,your,nearby = True,False,False
@@ -43,6 +46,7 @@ def convert_input():
                 your_ticket = line_to_ticket(line)
             elif nearby and ',' in line:
                 other_tickets.append(line_to_ticket(line))
+
 def rules_to_range():
     output = set()
     for name in rules:
@@ -50,6 +54,7 @@ def rules_to_range():
             for num in range(r[0],r[1]+1):
                 output.add(num)
     return output
+
 def find_invalid_tickets(r):
     count = 0
     invalid_indices = []
@@ -59,16 +64,19 @@ def find_invalid_tickets(r):
                 count += num
                 invalid_indices.append(i)
     return invalid_indices[::-1]
+
 #functions part B
 def drop_invalid_tickets(l):
     global other_tickets
     for i in l:
         del other_tickets[i]
+
 def scan_valid_tickets():
     for ticket in other_tickets:
         for index, num in enumerate(ticket):
             names = possible_names(num)
             set_names(index, names)
+
 def possible_names(num):
     output=set()
     for name in rules:
@@ -77,6 +85,7 @@ def possible_names(num):
                 # output.append(1
                 output.add(name)
     return output
+
 def set_names(index,names):
     global possible_config
     possible_config.setdefault(index,set())
@@ -85,20 +94,22 @@ def set_names(index,names):
         possible_config[index] = old & names
     else:
         possible_config[index] = names
+
 def find_single_element():
     for i in possible_config:
         if len(possible_config[i]) == 1:
             return i,possible_config[i]
+
 def delete_from_possible_config(name):
     global possible_config
     [elem] = name
     for i in possible_config:
         possible_config[i].discard(elem)# = \
+
 def product_of_departure_items():
     product = 1
     for index,item in enumerate(definitive_config):
         if 'departure' in item:
-            # print(index,item,your_ticket[index])
             product *= your_ticket[index]
     return product
 
@@ -116,6 +127,4 @@ while(0 in definitive_config):
     definitive_config[index] = elem_name
     delete_from_possible_config(set_name)
 
-# print(your_ticket)
-# print(definitive_config)
 print(product_of_departure_items())
