@@ -58,5 +58,5 @@ ans = 0
 for line in fileinput.input(files=sys.argv[1]):
     expr = list(line.replace(" ",""))
     ans += solve(expr)
-    # print(line,solve(expr))
+    print(solve(expr),"=",line)
 print("sum of all:",ans)

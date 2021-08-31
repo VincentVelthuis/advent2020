@@ -88,7 +88,7 @@ for iteration in range(nr_iterations):
     print("start iter {}, size {}".format(\
         iteration+1,np.sum(pocket_dimension)))
     updated_dimension = update_pocket_dimension()
-    pocket_dimension = updated_dimension
+    pocket_dimension = updated_dimension[:]
     plot_space(pocket_dimension)
     break
     print("end iter {}, size {}".format(\
